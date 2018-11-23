@@ -21,6 +21,14 @@ func TestTimeout(t *testing.T) {
 	log.Println(time.Now())
 	timeout.ChangeTime(time.Second * 10)
 
+	time.Sleep(time.Second * 2)
+	log.Println(time.Now())
+
+	go func() {
+		timeout.Stop()
+		end <- true
+	}()
+
 	for range end {
 		return
 	}
