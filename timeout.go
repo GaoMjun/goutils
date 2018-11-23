@@ -1,7 +1,6 @@
 package goutils
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -29,17 +28,12 @@ func NewTimeout(duration time.Duration, f func()) (timeout *Timeout) {
 	go func() {
 		for {
 			select {
-			case newDuration, ok := <-timeout.changeDurationCh:
-				if !ok {
-					return
-				}
+			case newDuration := <-timeout.changeDurationCh:
 				timeout.timeoutCh = time.After(newDuration)
 			case <-timeout.timeoutCh:
 				f()
 				return
 			case <-timeout.stopCh:
-				fmt.Println("timeout.stopCh")
-				close(timeout.changeDurationCh)
 				return
 			}
 		}
