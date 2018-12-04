@@ -1,6 +1,10 @@
 package goutils
 
-import "time"
+import (
+	"errors"
+	"os"
+	"time"
+)
 
 func RepeatTimer(d time.Duration, f func()) {
 	go func() {
@@ -8,4 +12,18 @@ func RepeatTimer(d time.Duration, f func()) {
 			f()
 		}
 	}()
+}
+
+func CreateFileNotExist(filename string) (f *os.File, err error) {
+	if _, err = os.Stat(filename); !os.IsNotExist(err) {
+		err = errors.New("file is exist")
+		return
+	}
+	
+	f, err = os.Create(filename)
+	if err != nil {
+		return
+	}
+
+	return
 }

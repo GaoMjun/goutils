@@ -17,3 +17,14 @@ func TestRepeatTimer(t *testing.T) {
 		return
 	}
 }
+
+func TestCreateFileNotExist(t *testing.T) {
+	f, err := CreateFileNotExist("test")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	f.WriteString("hjhh")
+	f.Close()
+}
