@@ -31,7 +31,7 @@ func CreateFileNotExist(filename string) (f *os.File, err error) {
 
 	_, err = os.Stat(filename)
 	if err == nil {
-		err = errors.New(fmt.Sprint(filename, " is exist"))
+		err = errors.New(fmt.Sprint("file exist ", filename))
 		return
 	}
 
