@@ -3,6 +3,7 @@ package goutils
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"os"
 	"path"
 	"time"
@@ -41,4 +42,15 @@ func CreateFileNotExist(filename string) (f *os.File, err error) {
 	}
 
 	return
+}
+
+func RandBytes(length int) []byte {
+	rand.Seed(time.Now().UnixNano())
+	p := make([]byte, length)
+	rand.Read(p)
+	return p
+}
+
+func RandString(length int) string {
+	return fmt.Sprintf("%x", RandBytes(length))
 }

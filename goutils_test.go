@@ -28,3 +28,12 @@ func TestCreateFileNotExist(t *testing.T) {
 	f.WriteString("hjhh")
 	f.Close()
 }
+
+func TestRandBytes(t *testing.T) {
+	bs := RandBytes(8)
+
+	log.Printf("%x", bs)
+
+	s := RandString(8)
+	log.Println(s)
+}
