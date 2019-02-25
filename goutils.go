@@ -6,6 +6,8 @@ import (
 	"math/rand"
 	"os"
 	"path"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -53,4 +55,30 @@ func RandBytes(length int) []byte {
 
 func RandString(length int) string {
 	return fmt.Sprintf("%x", RandBytes(length))
+}
+
+func SplitHostPort(hostport string) (host string, port int) {
+	ss := strings.Split(hostport, ":")
+	host = ss[0]
+
+	if len(ss) == 2 {
+		port, _ = strconv.Atoi(ss[1])
+		return
+	}
+
+	port = 80
+	return
+}
+
+func SplitIPPort(ipport string) (ip string, port int) {
+	ss := strings.Split(ipport, ":")
+	ip = ss[0]
+
+	if len(ss) == 2 {
+		port, _ = strconv.Atoi(ss[1])
+		return
+	}
+
+	port = 0
+	return
 }
