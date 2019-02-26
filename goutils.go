@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"net"
 	"os"
 	"path"
 	"strconv"
@@ -81,4 +82,23 @@ func SplitIPPort(ipport string) (ip string, port int) {
 
 	port = 0
 	return
+}
+
+func InetNtoA(ip uint32) string {
+	return fmt.Sprintf("%d.%d.%d.%d",
+		byte(ip>>24), byte(ip>>16), byte(ip>>8), byte(ip))
+}
+
+func InetAtoN(ip string) uint32 {
+	ipBytes := net.ParseIP(ip).To4()
+	return uint32(ipBytes[0])<<24 | uint32(ipBytes[1])<<16 | uint32(ipBytes[2])<<8 | uint32(ipBytes[3])
+}
+
+func InetNtoP(ip uint32) net.IP {
+	return []byte{byte(ip & 0xFF000000 >> 24), byte(ip & 0x00FF0000 >> 16), byte(ip & 0x0000FF00 >> 8), byte(ip & 0x000000FF >> 0)}
+}
+
+func InetPtoA(ip net.IP) string {
+	return fmt.Sprintf("%d.%d.%d.%d",
+		byte(ip[0]), byte(ip[1]), byte(ip[2]), byte(ip[3]))
 }
