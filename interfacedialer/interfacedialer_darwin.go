@@ -41,8 +41,7 @@ func Dial(network, address, ifname string, getProtectedSocket func(int, string, 
 		return
 	}
 
-	err = syscall.SetsockoptInt(fd, syscall.IPPROTO_IP, syscall.IP_BOUND_IF, ifIdx)
-	if err != nil {
+	if err = syscall.SetsockoptInt(fd, syscall.IPPROTO_IP, syscall.IP_BOUND_IF, ifIdx); err != nil {
 		syscall.Close(fd)
 		return
 	}
@@ -52,14 +51,12 @@ func Dial(network, address, ifname string, getProtectedSocket func(int, string, 
 		return
 	}
 
-	err = syscall.Connect(fd, &raddr)
-	if err != nil {
+	if err = syscall.Connect(fd, &raddr); err != nil {
 		syscall.Close(fd)
 		return
 	}
 
-	err = syscall.SetNonblock(fd, true)
-	if err != nil {
+	if err = syscall.SetNonblock(fd, true); err != nil {
 		syscall.Close(fd)
 		return
 	}
