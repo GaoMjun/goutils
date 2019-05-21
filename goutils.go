@@ -102,3 +102,14 @@ func InetPtoA(ip net.IP) string {
 	return fmt.Sprintf("%d.%d.%d.%d",
 		byte(ip[0]), byte(ip[1]), byte(ip[2]), byte(ip[3]))
 }
+
+func XOR(i, o, key []byte) {
+	for i, b := range i {
+		for j := 0; j < len(key); j++ {
+			b ^= key[j]
+		}
+
+		o[i] = b
+	}
+	return
+}
