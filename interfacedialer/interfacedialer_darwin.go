@@ -9,26 +9,16 @@ import (
 	"errors"
 	"fmt"
 	"net"
-	"strconv"
-	"strings"
 	"syscall"
-	"unsafe"
 )
 
-func Dial(network, address, ifname string, getProtectedSocket func(int, string, int) int) (conn *Conn, err error) {
+func Dial(network string, ip net.IP, port int, ifname string, ifIdx int, getProtectedSocket func(int, string, int) int) (conn net.Conn, err error) {
 	var (
-		hostport = strings.Split(address, ":")
-		host     = hostport[0]
-		port, _  = strconv.Atoi(hostport[1])
-		raddr    = syscall.SockaddrInet4{Port: port}
-		fd       int
-		ifname_c = C.CString(ifname)
-		ifIdx    = int(C.if_nametoindex(ifname_c))
-		laddr    = syscall.SockaddrInet4{}
+		raddr = syscall.SockaddrInet4{Port: port}
+		fd    int
 	)
 
-	C.free(unsafe.Pointer(ifname_c))
-	copy(raddr.Addr[:], net.ParseIP(host).To4())
+	copy(raddr.Addr[:], ip)
 
 	if network == "tcp" {
 		fd, err = syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, syscall.IPPROTO_IP)
@@ -46,7 +36,7 @@ func Dial(network, address, ifname string, getProtectedSocket func(int, string, 
 		return
 	}
 
-	if err = syscall.Bind(fd, &laddr); err != nil {
+	if err = syscall.Bind(fd, &syscall.SockaddrInet4{}); err != nil {
 		syscall.Close(fd)
 		return
 	}

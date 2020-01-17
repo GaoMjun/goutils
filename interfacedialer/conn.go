@@ -5,18 +5,15 @@ import (
 	"os"
 )
 
-type Conn struct {
-	net.Conn
-}
+func NewConn(fd int) (conn net.Conn, err error) {
+	var (
+		f = os.NewFile(uintptr(fd), "")
+	)
+	defer f.Close()
 
-func NewConn(fd int) (conn *Conn, err error) {
-	f := os.NewFile(uintptr(fd), "")
-	c, err := net.FileConn(f)
-	f.Close()
-	if err != nil {
+	if conn, err = net.FileConn(f); err != nil {
 		return
 	}
 
-	conn = &Conn{c}
 	return
 }
