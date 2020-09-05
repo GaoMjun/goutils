@@ -12,7 +12,11 @@ import (
 	"time"
 )
 
-func RepeatTimer(d time.Duration, f func()) {
+func RepeatTimer(d time.Duration, f func(), immediately bool) {
+	if immediately {
+		go f()
+	}
+
 	go func() {
 		for range time.Tick(d) {
 			f()
@@ -44,6 +48,19 @@ func CreateFileNotExist(filename string) (f *os.File, err error) {
 		return
 	}
 
+	return
+}
+
+func WriteFile(filename string, data []byte) (err error) {
+	var (
+		f *os.File
+	)
+
+	if f, err = CreateFileNotExist(filename); err != nil {
+		return
+	}
+
+	_, err = f.Write(data)
 	return
 }
 
