@@ -1,7 +1,6 @@
 package goutils
 
 import (
-	"errors"
 	"fmt"
 	"math/rand"
 	"net"
@@ -39,7 +38,7 @@ func CreateFileNotExist(filename string) (f *os.File, err error) {
 
 	_, err = os.Stat(filename)
 	if err == nil {
-		err = errors.New(fmt.Sprint("file exist ", filename))
+		err = fmt.Errorf("file exist %s", filename)
 		return
 	}
 
