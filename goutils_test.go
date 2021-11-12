@@ -11,7 +11,7 @@ func TestRepeatTimer(t *testing.T) {
 
 	RepeatTimer(time.Second*1, func() {
 		log.Println("RepeatTimer")
-	})
+	}, true)
 
 	for range end {
 		return

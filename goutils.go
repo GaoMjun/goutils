@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
-	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -25,7 +25,7 @@ func RepeatTimer(d time.Duration, f func(), immediately bool) {
 
 func CreateFileNotExist(filename string) (f *os.File, err error) {
 	var (
-		base = path.Dir(filename)
+		base = filepath.Dir(filename)
 	)
 
 	_, err = os.Stat(base)
