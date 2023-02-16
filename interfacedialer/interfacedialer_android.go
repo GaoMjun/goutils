@@ -14,7 +14,7 @@ import (
 	"github.com/GaoMjun/goutils"
 )
 
-func Dial(network, address, ifname string, getProtectedSocket func(int, string, int) int) (conn *net.Conn, err error) {
+func Dial(network, address, ifname string, getProtectedSocket func(int, string, int) int) (conn net.Conn, err error) {
 	var (
 		hostport = strings.Split(address, ":")
 		host     = hostport[0]
