@@ -10,7 +10,7 @@ import (
 	"strings"
 	"syscall"
 
-	"goutils"
+	"github.com/GaoMjun/goutils"
 )
 
 func Dial(network, address, ifname string, getProtectedSocket func(int, string, int) int) (conn *net.Conn, err error) {
