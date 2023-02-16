@@ -1,4 +1,5 @@
-// +build !android
+//go:build linux
+// +build linux
 
 package interfacedialer
 
@@ -9,10 +10,10 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/GaoMjun/goutils"
+	"goutils"
 )
 
-func Dial(network, address, ifname string, getProtectedSocket func(int, string, int) int) (conn *Conn, err error) {
+func Dial(network, address, ifname string, getProtectedSocket func(int, string, int) int) (conn *net.Conn, err error) {
 	var (
 		hostport = strings.Split(address, ":")
 		host     = hostport[0]
