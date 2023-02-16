@@ -6,6 +6,7 @@ package interfacedialer
 import (
 	"errors"
 	"fmt"
+	"net"
 	"strconv"
 	"strings"
 	"syscall"
