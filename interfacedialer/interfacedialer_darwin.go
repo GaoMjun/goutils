@@ -3,25 +3,29 @@
 
 package interfacedialer
 
-/*
-#include <net/if.h>
-#include <stdlib.h>
-*/
-import "C"
 import (
 	"errors"
 	"fmt"
 	"net"
+	"strconv"
+	"strings"
 	"syscall"
+
+	"github.com/GaoMjun/goutils"
 )
 
-func Dial(network string, ip net.IP, port int, ifname string, ifIdx int, getProtectedSocket func(int, string, int) int) (conn net.Conn, err error) {
+func Dial(network, address, ifname string, getProtectedSocket func(int, string, int) int) (conn net.Conn, err error) {
 	var (
-		raddr = syscall.SockaddrInet4{Port: port}
-		fd    int
+		hostport = strings.Split(address, ":")
+		host     = hostport[0]
+		port, _  = strconv.Atoi(hostport[1])
+		addr     syscall.SockaddrInet4
+		fd       int
+		iface    *net.Interface
 	)
 
-	copy(raddr.Addr[:], ip)
+	copy(addr.Addr[:], goutils.InetNtoP(goutils.InetAtoN(host)))
+	addr.Port = port
 
 	if network == "tcp" {
 		fd, err = syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, syscall.IPPROTO_IP)
@@ -34,7 +38,11 @@ func Dial(network string, ip net.IP, port int, ifname string, ifIdx int, getProt
 		return
 	}
 
-	if err = syscall.SetsockoptInt(fd, syscall.IPPROTO_IP, syscall.IP_BOUND_IF, ifIdx); err != nil {
+	if iface, err = net.InterfaceByName(ifname); err != nil {
+		return
+	}
+
+	if err = syscall.SetsockoptInt(fd, syscall.IPPROTO_IP, syscall.IP_BOUND_IF, iface.Index); err != nil {
 		syscall.Close(fd)
 		return
 	}
@@ -44,7 +52,7 @@ func Dial(network string, ip net.IP, port int, ifname string, ifIdx int, getProt
 		return
 	}
 
-	if err = syscall.Connect(fd, &raddr); err != nil {
+	if err = syscall.Connect(fd, &addr); err != nil {
 		syscall.Close(fd)
 		return
 	}
